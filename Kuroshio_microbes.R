@@ -44,6 +44,12 @@ write.table(Bac_Normcd, file = "D:/Dropbox/Research/KuroshioBac_Assemb/data/Bac_
 # 
 # head(Bac_VScd)
 
+library(DESeq2)
+library(tidyverse)
+
+Bac_un <- read.table(file = "https://raw.githubusercontent.com/OscarFHC/KuroshioBac/main/data/Bac_unrareSeqXSt.csv?token=AFL4RI5SZERQJ33SGIUDJ5S7UJTLO", 
+                     sep = ",", header = TRUE, row.names = 1, stringsAsFactors = FALSE, fill = TRUE)
+
 Bac <- Bac_un
 Mincomm_size <- min(colSums(Bac_un))
 Meancomm_size <- mean(colSums(Bac_un))
