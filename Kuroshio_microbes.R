@@ -49,8 +49,8 @@ library(tidyverse)
 
 Bac_un <- read.table(file = "https://raw.githubusercontent.com/OscarFHC/KuroshioBac/main/data/Bac_unrareSeqXSt.csv?token=AFL4RI5SZERQJ33SGIUDJ5S7UJTLO", 
                      sep = ",", header = TRUE, row.names = 1, stringsAsFactors = FALSE, fill = TRUE)
-
 Bac <- Bac_un
+
 Mincomm_size <- min(colSums(Bac_un))
 Meancomm_size <- mean(colSums(Bac_un))
 Medcomm_size <- median(colSums(Bac_un))
@@ -60,7 +60,8 @@ Bac_MinRare <- Bac_un
 Bac_MeanRare <- Bac_un
 Bac_MedRare <- Bac_un
 Bac_MaxRare <- Bac_un
-t <- Sys.time()
+# Using the following script to rarefy the community to min, mean, median, and max community size
+# Make sure to change the community size parameter. 
 for (i in 1:ncol(Bac)){
   samp_temp <- matrix(0, nrow(Bac), 1000)
   for (k in 2:999){
@@ -73,14 +74,10 @@ for (i in 1:ncol(Bac)){
     }
     Bac_meanRare[, i] <- rowMeans(samp_temp)
   }
-} 
-Sys.time() - t
-
+}
 write.table(Bac_meanRare, file = "D:/Dropbox/Research/KuroshioBac_Assemb/data/Bac_MeanRareSeqXSt.csv",
             sep = ",", col.names = TRUE, row.names = TRUE)
 
-  
-  
 
 
 
