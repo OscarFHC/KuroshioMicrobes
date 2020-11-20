@@ -2,7 +2,7 @@ library(DESeq2)
 library(tidyverse)
 library(iNEXT)
 
-Bac_un <- read.table(file = "D:/Dropbox/Research/KuroshioBac_Assemb/data/Bac_unrareVSSeqXSt.csv", 
+Bac_un <- read.table(file = "D:/Dropbox/Research/KuroshioBac_Assemb/data/All-abundance-data.csv", 
                      sep = ",", header = TRUE, row.names = 1, stringsAsFactors = FALSE, fill = TRUE)
 condition = factor(substr(colnames(Bac_un), nchar(colnames(Bac_un)), nchar(colnames(Bac_un))))
 
@@ -23,7 +23,7 @@ Bac_un_dds <- estimateSizeFactors(Bac_un_dds)
 sizeFactors(Bac_un_dds)
 Bac_un_dds <- estimateDispersions(Bac_un_dds)
 Bac_vsd <- varianceStabilizingTransformation(Bac_un_dds, blind = FALSE)
-write.table(assay(Bac_vsd), file = "D:/Dropbox/Research/KuroshioBac_Assemb/data/Bac_unrareVSSeqXSt.csv",
+write.table(assay(Bac_vsd), file = "D:/Dropbox/Research/KuroshioBac_Assemb/data/Bac_unrareVSSeqXSt_2.csv",
             sep = ",", col.names = TRUE, row.names = TRUE)
 
 # Bac_vsd <- vst(Bac_un_dds, blind = FALSE, nsub = 500)
@@ -47,7 +47,7 @@ write.table(Bac_Normcd, file = "D:/Dropbox/Research/KuroshioBac_Assemb/data/Bac_
 library(DESeq2)
 library(tidyverse)
 
-Bac_un <- read.table(file = "D:/Dropbox/Research/KuroshioBac/data/Bac_unrareVSSeqXSt.csv", 
+Bac_un <- read.table(file = "D:/Dropbox/Research/KuroshioBac/data/All-abundance-data.csv", 
                      sep = ",", header = TRUE, row.names = 1, stringsAsFactors = FALSE, fill = TRUE)
 Bac <- t(Bac_un)
 
@@ -76,5 +76,62 @@ for (i in 1:ncol(Bac)){
     Bac_MinRare[, i] <- rowMeans(samp_temp)
   }
 }
-write.table(Bac_MinRare, file = "D:/Dropbox/Research/KuroshioBac_Assemb/data/Bac_MinRare.csv",
+write.table(Bac_MinRare, file = "D:/Dropbox/Research/KuroshioBac_Assemb/data/Abund_MinRare.csv",
             sep = ",", col.names = TRUE, row.names = TRUE)
+
+for (i in 1:ncol(Bac)){
+  samp_temp <- matrix(0, nrow(Bac), 1000)
+  for (k in 2:999){
+    sp_list <- which(Bac[, i] != 0)
+    fake_comm <- sample(sp_list, size = Meancomm_size, replace = TRUE, prob = Bac[Bac[, i] != 0, i]/sum(Bac[Bac[, i] != 0, i]))
+    
+    samp_temp[, 1] <- Bac[, i]
+    for (j in 1:length(sp_list)){
+      samp_temp[sp_list[j], k] <- length(which(fake_comm == sp_list[j]))
+    }
+    Bac_MeanRare[, i] <- rowMeans(samp_temp)
+  }
+}
+write.table(Bac_meanRare, file = "D:/Dropbox/Research/KuroshioBac_Assemb/data/Abund_MeanRare.csv",
+            sep = ",", col.names = TRUE, row.names = TRUE)
+
+for (i in 1:ncol(Bac)){
+  samp_temp <- matrix(0, nrow(Bac), 1000)
+  for (k in 2:999){
+    sp_list <- which(Bac[, i] != 0)
+    fake_comm <- sample(sp_list, size = Medcomm_size, replace = TRUE, prob = Bac[Bac[, i] != 0, i]/sum(Bac[Bac[, i] != 0, i]))
+    
+    samp_temp[, 1] <- Bac[, i]
+    for (j in 1:length(sp_list)){
+      samp_temp[sp_list[j], k] <- length(which(fake_comm == sp_list[j]))
+    }
+    Bac_MedRare[, i] <- rowMeans(samp_temp)
+  }
+}
+write.table(Bac_MedRare, file = "D:/Dropbox/Research/KuroshioBac_Assemb/data/Abund_MedRare.csv",
+            sep = ",", col.names = TRUE, row.names = TRUE)
+
+for (i in 1:ncol(Bac)){
+  samp_temp <- matrix(0, nrow(Bac), 1000)
+  for (k in 2:999){
+    sp_list <- which(Bac[, i] != 0)
+    fake_comm <- sample(sp_list, size = Maxcomm_size, replace = TRUE, prob = Bac[Bac[, i] != 0, i]/sum(Bac[Bac[, i] != 0, i]))
+    
+    samp_temp[, 1] <- Bac[, i]
+    for (j in 1:length(sp_list)){
+      samp_temp[sp_list[j], k] <- length(which(fake_comm == sp_list[j]))
+    }
+    Bac_MaxRare[, i] <- rowMeans(samp_temp)
+  }
+}
+write.table(Bac_MaxRare, file = "D:/Dropbox/Research/KuroshioBac_Assemb/data/Abund_MaxRare.csv",
+            sep = ",", col.names = TRUE, row.names = TRUE)
+
+
+
+
+
+
+
+
+
